@@ -1,5 +1,5 @@
-// Package common ...
-package common
+// Package goshared ...
+package goshared
 
 import (
 	"crypto/aes"

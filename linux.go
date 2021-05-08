@@ -1,9 +1,8 @@
-// Package linux ...
-package linux
+package goshared
 
 import "os/exec"
 
-// ShellMV move file by exec shell command
+// ShellMV (Linux only) move file by exec shell command
 func ShellMV(src, dst string) error {
 	cmd := exec.Command("mv", src, dst)
 	_, err := cmd.Output()
