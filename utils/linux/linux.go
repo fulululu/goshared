@@ -1,4 +1,7 @@
+// Package linux ...
 package linux
+
+import "os/exec"
 
 // ShellMV move file by exec shell command
 func ShellMV(src, dst string) error {
