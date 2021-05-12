@@ -2,6 +2,7 @@
 package goshared
 
 import (
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -10,7 +11,9 @@ import (
 	"io"
 	"net/url"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 )
 
 func Ternary(b bool, t, f interface{}) interface{} {
@@ -146,4 +149,16 @@ func RepeatedlyDo(op func() error, rt uint) error {
 		}
 	}
 	return e
+}
+
+// NewSignalCtx generate context which work with SIGINT and SIGTERM
+func NewSignalCtx() context.Context {
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		sCh := make(chan os.Signal, 1)
+		signal.Notify(sCh, syscall.SIGINT, syscall.SIGTERM)
+		<-sCh
+		cancel()
+	}()
+	return ctx
 }
