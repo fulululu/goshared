@@ -1,4 +1,4 @@
-module github.com/Fulululu/goshared
+module github.com/fulululu/goshared
 
 go 1.14
 
