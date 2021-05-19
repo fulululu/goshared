@@ -6,6 +6,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type MySQLConfig struct {
@@ -21,7 +23,8 @@ type MySQLConfig struct {
 }
 
 type MySQLManager struct {
-	Client *sql.DB
+	Client    *sql.DB
+	ORMClient *gorm.DB
 }
 
 func (ins *MySQLManager) Init(cfg MySQLConfig) error {
@@ -39,6 +42,12 @@ func (ins *MySQLManager) Init(cfg MySQLConfig) error {
 	db.SetMaxOpenConns(cfg.MaxOpenConns)
 	db.SetMaxIdleConns(cfg.MaxIdleConns)
 	ins.Client = db
-
+	gormDB, e := gorm.Open(mysql.New(mysql.Config{
+		Conn: db,
+	}), &gorm.Config{})
+	if e != nil {
+		return e
+	}
+	ins.ORMClient = gormDB
 	return nil
 }
