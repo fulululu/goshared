@@ -12,14 +12,14 @@ import (
 
 type MySQLConfig struct {
 	IP                string `envconfig:"MYSQL_IP"`
-	Port              string `envconfig:"default=3306, MYSQL_PORT"`
-	TLP               string `envconfig:"optional, MYSQL_TLP"`
+	Port              string `envconfig:"default=3306,MYSQL_PORT"`
+	TLP               string `envconfig:"optional,MYSQL_TLP"`
 	User              string `envconfig:"MYSQL_USER"`
 	Password          string `envconfig:"MYSQL_PASSWORD"`
 	Database          string `envconfig:"MYSQL_DATABASE"`
-	ConnMaxLifeMinute int    `envconfig:"default=3, MYSQL_CONN_MAX_LIFE_MINUTE"`
-	MaxOpenConns      int    `envconfig:"default=10, MYSQL_MAX_OPEN_CONNS"`
-	MaxIdleConns      int    `envconfig:"default=10, MYSQL_MAX_IDLE_CONNS"`
+	ConnMaxLifeMinute int    `envconfig:"default=3,MYSQL_CONN_MAX_LIFE_MINUTE"`
+	MaxOpenConns      int    `envconfig:"default=10,MYSQL_MAX_OPEN_CONNS"`
+	MaxIdleConns      int    `envconfig:"default=10,MYSQL_MAX_IDLE_CONNS"`
 }
 
 type MySQLManager struct {
