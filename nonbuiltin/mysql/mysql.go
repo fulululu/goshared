@@ -1,4 +1,4 @@
-// Package nonbuiltin contains codes that rely on third-party libraries.
+// Package mysql ...
 package mysql
 
 import (
