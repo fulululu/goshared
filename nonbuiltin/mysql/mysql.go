@@ -1,5 +1,5 @@
 // Package nonbuiltin contains codes that rely on third-party libraries.
-package nonbuiltin
+package mysql
 
 import (
 	"database/sql"
@@ -24,8 +24,8 @@ type RawConfig struct {
 }
 
 type ORMConfig struct {
-	GORMDialector mysql.Config
-	GORM          gorm.Config
+	MySQL mysql.Config
+	GORM  gorm.Config
 }
 
 func NewMySQLClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
@@ -43,8 +43,8 @@ func NewMySQLClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
 	db.SetMaxIdleConns(rawCfg.MaxIdleConns)
 
 	// ORM layer
-	ormCfg.GORMDialector.Conn = db
-	gormDialector := mysql.New(ormCfg.GORMDialector)
+	ormCfg.MySQL.Conn = db
+	gormDialector := mysql.New(ormCfg.MySQL)
 	gormCfg := ormCfg.GORM
 	gormDB, e := gorm.Open(gormDialector, &gormCfg)
 	if e != nil {

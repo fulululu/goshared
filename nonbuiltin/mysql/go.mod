@@ -1,4 +1,4 @@
-module github.com/fulululu/goshared
+module github.com/fulululu/goshared/nonbuiltin/mysql
 
 go 1.14
 
