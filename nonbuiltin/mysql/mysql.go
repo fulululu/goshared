@@ -12,7 +12,7 @@ import (
 )
 
 type RawConfig struct {
-	IP                string `envconfig:"MYSQL_IP"`
+	Host              string `envconfig:"MYSQL_HOST"`
 	Port              string `envconfig:"MYSQL_PORT,default=3306"`
 	TLP               string `envconfig:"MYSQL_TLP,optional"`
 	User              string `envconfig:"MYSQL_USER"`
@@ -30,7 +30,7 @@ type ORMConfig struct {
 
 func NewMySQLClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
 	// Raw layer
-	dsn := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=True&loc=Local", rawCfg.User, rawCfg.Password, "tcp", rawCfg.IP, rawCfg.Port, rawCfg.Database)
+	dsn := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=True&loc=Local", rawCfg.User, rawCfg.Password, "tcp", rawCfg.Host, rawCfg.Port, rawCfg.Database)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
@@ -46,9 +46,9 @@ func NewMySQLClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
 	ormCfg.MySQL.Conn = db
 	gormDialector := mysql.New(ormCfg.MySQL)
 	gormCfg := ormCfg.GORM
-	gormDB, e := gorm.Open(gormDialector, &gormCfg)
-	if e != nil {
-		return nil, e
+	gormDB, err := gorm.Open(gormDialector, &gormCfg)
+	if err != nil {
+		return nil, err
 	}
 
 	return gormDB, nil
