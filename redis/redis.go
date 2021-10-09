@@ -8,7 +8,7 @@ import (
 )
 
 type RawConfig struct {
-	Host     string `envconfig:"REDIS_HOST,default=0.0.0.0"`
+	Host     string `envconfig:"REDIS_HOST,default=127.0.0.1"`
 	Port     string `envconfig:"REDIS_PORT,default=6379"`
 	User     string `envconfig:"REDIS_USER,default=default"`
 	Password string `envconfig:"REDIS_PASSWORD,optional"`

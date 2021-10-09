@@ -12,7 +12,7 @@ import (
 )
 
 type RawConfig struct {
-	Host              string `envconfig:"MYSQL_HOST"`
+	Host              string `envconfig:"MYSQL_HOST,default=127.0.0.1"`
 	Port              string `envconfig:"MYSQL_PORT,default=3306"`
 	TLP               string `envconfig:"MYSQL_TLP,optional"`
 	User              string `envconfig:"MYSQL_USER"`
