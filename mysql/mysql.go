@@ -28,7 +28,7 @@ type ORMConfig struct {
 	GORM  gorm.Config
 }
 
-func NewMySQLClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
+func NewClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
 	// Raw layer
 	dsn := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=True&loc=Local", rawCfg.User, rawCfg.Password, "tcp", rawCfg.Host, rawCfg.Port, rawCfg.Database)
 	db, err := sql.Open("mysql", dsn)
