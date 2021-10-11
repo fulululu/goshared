@@ -1,5 +1,4 @@
-// Package mysql ...
-package mysql
+package goshared
 
 import (
 	"database/sql"
@@ -11,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type RawConfig struct {
+type MysqlRawConfig struct {
 	Host              string `envconfig:"MYSQL_HOST,default=127.0.0.1"`
 	Port              string `envconfig:"MYSQL_PORT,default=3306"`
 	TLP               string `envconfig:"MYSQL_TLP,optional"`
@@ -23,12 +22,12 @@ type RawConfig struct {
 	MaxIdleConns      int    `envconfig:"MYSQL_MAX_IDLE_CONNS,default=10"`
 }
 
-type ORMConfig struct {
+type MysqlORMConfig struct {
 	MySQL mysql.Config
 	GORM  gorm.Config
 }
 
-func NewClient(rawCfg RawConfig, ormCfg ORMConfig) (*gorm.DB, error) {
+func NewMysqlClient(rawCfg MysqlRawConfig, ormCfg MysqlORMConfig) (*gorm.DB, error) {
 	// Raw layer
 	dsn := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=True&loc=Local", rawCfg.User, rawCfg.Password, "tcp", rawCfg.Host, rawCfg.Port, rawCfg.Database)
 	db, err := sql.Open("mysql", dsn)
