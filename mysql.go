@@ -44,8 +44,7 @@ func NewMysqlClient(rawCfg MysqlRawConfig, ormCfg MysqlORMConfig) (*gorm.DB, err
 	// ORM layer
 	ormCfg.MySQL.Conn = db
 	gormDialector := mysql.New(ormCfg.MySQL)
-	gormCfg := ormCfg.GORM
-	gormDB, err := gorm.Open(gormDialector, &gormCfg)
+	gormDB, err := gorm.Open(gormDialector, &ormCfg.GORM)
 	if err != nil {
 		return nil, err
 	}

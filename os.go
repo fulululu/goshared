@@ -58,3 +58,12 @@ func NewSignalCtx() context.Context {
 	}()
 	return ctx
 }
+
+// CheckFileExistence ...
+func CheckFileExistence(filepath string) bool {
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		return false
+	} else {
+		return true
+	}
+}
