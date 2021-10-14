@@ -11,13 +11,13 @@ import (
 )
 
 type LogrusRawConfig struct {
-	LogFile string `envconfig:"LOGRUS_LOG_FILE,optional"`
+	LogLevel logrus.Level `envconfig:"-"`
+	LogFile  string       `envconfig:"LOGRUS_LOG_FILE,optional"`
 }
 
 // InitLogrus ...
 func InitLogrus(cfg LogrusRawConfig) {
 	var writters []io.Writer
-
 	writters = append(writters, os.Stdout)
 	if len(cfg.LogFile) != 0 {
 		f, err := os.OpenFile(cfg.LogFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
@@ -38,6 +38,7 @@ func InitLogrus(cfg LogrusRawConfig) {
 		},
 	})
 	logrus.SetOutput(io.MultiWriter(writters...))
+	logrus.SetLevel(cfg.LogLevel)
 }
 
 func NewLogrusLogger(cfg LogrusRawConfig) *logrus.Logger {
@@ -64,6 +65,7 @@ func NewLogrusLogger(cfg LogrusRawConfig) *logrus.Logger {
 		},
 	})
 	logger.SetOutput(io.MultiWriter(writters...))
+	logrus.SetLevel(cfg.LogLevel)
 
 	return logger
 }
