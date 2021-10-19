@@ -11,8 +11,9 @@ import (
 )
 
 type LogrusRawConfig struct {
-	LogLevel logrus.Level `envconfig:"-"`
-	LogFile  string       `envconfig:"LOGRUS_LOG_FILE,optional"`
+	LogLevel  logrus.Level `envconfig:"-"`
+	LogFile   string       `envconfig:"LOGRUS_LOG_FILE,optional"`
+	LogCaller bool         `envconfig:"LOGRUS_LOG_CALLER,optional"`
 }
 
 // InitLogrus ...
@@ -39,6 +40,7 @@ func InitLogrus(cfg LogrusRawConfig) {
 	})
 	logrus.SetOutput(io.MultiWriter(writters...))
 	logrus.SetLevel(cfg.LogLevel)
+	logrus.SetReportCaller(cfg.LogCaller)
 }
 
 func NewLogrusLogger(cfg LogrusRawConfig) *logrus.Logger {
@@ -65,7 +67,8 @@ func NewLogrusLogger(cfg LogrusRawConfig) *logrus.Logger {
 		},
 	})
 	logger.SetOutput(io.MultiWriter(writters...))
-	logrus.SetLevel(cfg.LogLevel)
+	logger.SetLevel(cfg.LogLevel)
+	logger.SetReportCaller(cfg.LogCaller)
 
 	return logger
 }
