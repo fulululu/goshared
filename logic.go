@@ -1,6 +1,9 @@
 package goshared
 
-import "reflect"
+import (
+	"math"
+	"reflect"
+)
 
 // Ternary if b == true return t else return f
 func Ternary(b bool, t, f interface{}) interface{} {
@@ -26,7 +29,7 @@ func RepeatedlyDo(op func() error, rt uint) error {
 }
 
 // Paginate ...
-func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interface{}, count uint64) {
+func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interface{}) {
 	s := reflect.ValueOf(slice)
 	if s.Kind() != reflect.Slice {
 		panic("parameter 'slice' given a non-slice type")
@@ -35,7 +38,7 @@ func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interf
 	result = make([]interface{}, 0)
 	sl := s.Len()
 	of := 0
-	li := 0
+	li := math.MaxInt
 
 	if offset != nil {
 		of = int(*offset)
@@ -45,7 +48,7 @@ func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interf
 	}
 
 	if sl == 0 || of >= sl || li == 0 { // boundary condition
-		return nil, 0
+		return nil
 	}
 
 	num := 0
@@ -59,5 +62,5 @@ func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interf
 		}
 	}
 
-	return result, uint64(len(result))
+	return result
 }
