@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -35,6 +36,7 @@ func InitLogrus(cfg LogrusRawConfig) {
 			s := strings.Split(f.Function, ".")
 			funcname := s[len(s)-1]
 			_, filename := path.Split(f.File)
+			filename = filename + ":" + strconv.Itoa(f.Line)
 			return funcname, filename
 		},
 	})
