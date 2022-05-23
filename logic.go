@@ -64,3 +64,22 @@ func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interf
 
 	return result
 }
+
+// FilterSlice ...
+func FilterSlice(source interface{}, condition func(element interface{}) bool) (result []interface{}) {
+	s := reflect.ValueOf(source)
+	if s.Kind() != reflect.Slice {
+		panic("parameter 'source' is slice type, but is given a non-slice type")
+	}
+
+	result = make([]interface{}, 0)
+	sl := s.Len()
+
+	for i := 0; i < sl; i++ {
+		if condition(s.Index(i).Interface()) {
+			result = append(result, s.Index(i).Interface())
+		}
+	}
+
+	return
+}
