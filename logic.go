@@ -1,8 +1,10 @@
 package goshared
 
 import (
+	"context"
 	"math"
 	"reflect"
+	"time"
 )
 
 // Ternary if b == true return t else return f
@@ -92,4 +94,27 @@ func SliceContains[T comparable](s []T, e T) bool {
 		}
 	}
 	return false
+}
+
+type LimitedOperation func(context.Context) error
+type FrequencyLimiter func(ctx context.Context, op LimitedOperation) (done bool, err error)
+
+// MakeFrequencyLimiter ...
+func MakeFrequencyLimiter(period time.Duration, frequency uint64) FrequencyLimiter {
+	start := time.Now()
+	count := uint64(0)
+	return func(ctx context.Context, op LimitedOperation) (bool, error) {
+		now := time.Now()
+		if now.Add(-period).After(start) {
+			start = now
+			count = 0
+		}
+
+		if count < frequency {
+			count++
+			return true, op(ctx)
+		} else {
+			return false, nil
+		}
+	}
 }
