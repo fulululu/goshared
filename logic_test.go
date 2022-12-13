@@ -9,6 +9,75 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+func TestSlicePaginate(t *testing.T) {
+	type st struct {
+		ID uint64
+	}
+	var before = []st{
+		{ID: 1},
+		{ID: 2},
+		{ID: 3},
+		{ID: 4},
+		{ID: 5},
+	}
+	var after []st
+
+	var offset, limit = uint64(1), uint64(2)
+	after = goshared.SlicePaginate(before, &offset, &limit)
+	if len(after) != 2 && after[0].ID != uint64(2) && after[1].ID != uint64(3) {
+		t.Errorf("incorrect result: %v", after)
+	}
+	t.Logf("correct result: %v", after)
+
+	offset, limit = uint64(3), uint64(5)
+	after = goshared.SlicePaginate(before, &offset, &limit)
+	if len(after) != 2 && after[0].ID != uint64(4) && after[1].ID != uint64(5) {
+		t.Errorf("incorrect result: %v", after)
+	}
+	t.Logf("correct result: %v", after)
+
+	offset, limit = uint64(3), uint64(0)
+	after = goshared.SlicePaginate(before, &offset, &limit)
+	if len(after) != 0 {
+		t.Errorf("incorrect result: %v", after)
+	}
+	t.Logf("correct result: %v", after)
+
+	offset, limit = uint64(6), uint64(3)
+	after = goshared.SlicePaginate(before, &offset, &limit)
+	if len(after) != 0 {
+		t.Errorf("incorrect result: %v", after)
+	}
+	t.Logf("correct result: %v", after)
+}
+
+func TestSliceFilter(t *testing.T) {
+	type st struct {
+		ID uint64
+	}
+	var before = []st{
+		{ID: 1},
+		{ID: 2},
+		{ID: 3},
+		{ID: 4},
+		{ID: 5},
+	}
+	var after []st
+
+	condition1 := func(element st) bool {
+		if element.ID > 3 {
+			return true
+		} else {
+			return false
+		}
+	}
+	after = goshared.SliceFilter(before, condition1)
+	if len(after) != 2 && after[0].ID != uint64(4) && after[1].ID != uint64(5) {
+		t.Errorf("incorrect result: %v", after)
+	}
+	t.Logf("correct result: %v", after)
+}
+
 func TestMakeFrequencyLimiter(t *testing.T) {
 	op := func(ctx context.Context) error {
 		time.Sleep(time.Second)

@@ -3,12 +3,11 @@ package goshared
 import (
 	"context"
 	"math"
-	"reflect"
 	"time"
 )
 
 // Ternary if b == true return t else return f
-func Ternary(b bool, t, f interface{}) interface{} {
+func Ternary[T comparable](b bool, t, f T) T {
 	if b {
 		return t
 	}
@@ -30,60 +29,42 @@ func RepeatedlyDo(op func() error, rt uint) error {
 	return err
 }
 
-// Paginate ...
-func Paginate(slice interface{}, offset *uint64, limit *uint64) (result []interface{}) {
-	s := reflect.ValueOf(slice)
-	if s.Kind() != reflect.Slice {
-		panic("parameter 'slice' given a non-slice type")
-	}
-
-	result = make([]interface{}, 0)
-	sl := s.Len()
-	of := 0
-	li := math.MaxInt
+// SlicePaginate ...
+func SlicePaginate[T comparable](in []T, offset *uint64, limit *uint64) (out []T) {
+	sliceLength := uint64(len(in))
+	defaultOffset := uint64(0)
+	defaultLimit := uint64(math.MaxInt)
 
 	if offset != nil {
-		of = int(*offset)
+		defaultOffset = *offset
 	}
 	if limit != nil {
-		li = int(*limit)
+		defaultLimit = *limit
 	}
 
-	if sl == 0 || of >= sl || li == 0 { // boundary condition
+	if sliceLength == 0 || defaultOffset >= sliceLength || defaultLimit == 0 { // boundary condition
 		return nil
 	}
 
-	num := 0
-	for i := 0; i < sl; i++ {
-		if i >= of {
-			result = append(result, s.Index(i).Interface())
-			num++
-		}
-		if num >= li {
-			break
-		}
+	if defaultOffset+defaultLimit > sliceLength {
+		out = append(out, in[defaultOffset:]...)
+	} else {
+		out = append(out, in[defaultOffset:defaultOffset+defaultLimit]...)
 	}
 
-	return result
+	return out
 }
 
-// FilterSlice ...
-func FilterSlice(source interface{}, condition func(element interface{}) bool) (result []interface{}) {
-	s := reflect.ValueOf(source)
-	if s.Kind() != reflect.Slice {
-		panic("parameter 'source' is slice type, but is given a non-slice type")
-	}
-
-	result = make([]interface{}, 0)
-	sl := s.Len()
-
-	for i := 0; i < sl; i++ {
-		if condition(s.Index(i).Interface()) {
-			result = append(result, s.Index(i).Interface())
+// SliceFilter ...
+func SliceFilter[T comparable](in []T, condition func(element T) bool) (out []T) {
+	for _, v := range in {
+		if condition(v) {
+			var tmp = v
+			out = append(out, tmp)
 		}
 	}
 
-	return
+	return out
 }
 
 // SliceContains ...
