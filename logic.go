@@ -67,6 +67,18 @@ func SliceFilter[T comparable](in []T, condition func(element T) bool) (out []T)
 	return out
 }
 
+// GetFirstElementFromSliceByCondition ...
+func GetFirstElementFromSliceByCondition[T comparable](in []T, condition func(element T) bool) (out T, ok bool) {
+	for _, v := range in {
+		if condition(v) {
+			var tmp = v
+			return tmp, true
+		}
+	}
+
+	return out, false
+}
+
 // SliceContains ...
 func SliceContains[T comparable](s []T, e T) bool {
 	for _, v := range s {
