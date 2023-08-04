@@ -7,7 +7,7 @@ import (
 )
 
 // Ternary if b == true return t else return f
-func Ternary[T comparable](b bool, t, f T) T {
+func Ternary[T any](b bool, t, f T) T {
 	if b {
 		return t
 	}
@@ -30,7 +30,7 @@ func RepeatedlyDo(op func() error, rt uint) error {
 }
 
 // SlicePaginate ...
-func SlicePaginate[T comparable](in []T, offset *uint64, limit *uint64) (out []T) {
+func SlicePaginate[T any](in []T, offset *uint64, limit *uint64) (out []T) {
 	sliceLength := uint64(len(in))
 	defaultOffset := uint64(0)
 	defaultLimit := uint64(math.MaxInt)
@@ -56,7 +56,7 @@ func SlicePaginate[T comparable](in []T, offset *uint64, limit *uint64) (out []T
 }
 
 // SliceFilter ...
-func SliceFilter[T comparable](in []T, condition func(element T) bool) (out []T) {
+func SliceFilter[T any](in []T, condition func(element T) bool) (out []T) {
 	for _, v := range in {
 		if condition(v) {
 			var tmp = v
@@ -68,7 +68,7 @@ func SliceFilter[T comparable](in []T, condition func(element T) bool) (out []T)
 }
 
 // GetFirstElementFromSliceByCondition ...
-func GetFirstElementFromSliceByCondition[T comparable](in []T, condition func(element T) bool) (out T, ok bool) {
+func GetFirstElementFromSliceByCondition[T any](in []T, condition func(element T) bool) (out T, ok bool) {
 	for _, v := range in {
 		if condition(v) {
 			var tmp = v
